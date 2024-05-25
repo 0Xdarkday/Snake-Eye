@@ -17,7 +17,7 @@ class Reporter:
         logging.info(f"Reporting packet: {jsonPayload}")
 
         try:
-            url = f'{self.protocol}://{self.ip}:{self.port}/api/?{jsonPayload}'
+            url = f'{self.protocol}://{self.ip}:{self.port}/cgi-bin/report.cgi?data={jsonPayload}'
             response = requests.get(url)
             response.raise_for_status()
         except requests.RequestException as e:
