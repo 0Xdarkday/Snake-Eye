@@ -1,0 +1,6 @@
+{
+  "api_server_ip": "10.0.2.15", // Replace this with the IP address of your Apache server hosting the CGI script
+  "api_server_port": "8080",
+  "interface": "eth0",
+  "use_https": false
+}
