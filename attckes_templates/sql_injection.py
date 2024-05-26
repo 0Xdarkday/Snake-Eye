@@ -1,15 +1,14 @@
-from .base_attack import BaseAttack
+from base_attack import BaseAttack
 
 class SQLInjectionDetector(BaseAttack):
-    def __init__(self, reporter, config):
+    def __init__(self, reporter, patterns):
         super().__init__(reporter)
-        self.sql_injection_patterns = config['patterns']['sql_injection']
+        self.patterns = patterns
 
     def detect(self, packet):
-        if hasattr(packet, 'http'):
-            http_payload = packet.http.file_data.lower()
-            for signature in self.sql_injection_patterns:
-                if signature in http_payload:
-                    self.reporter.report_attack("SQL Injection", packet.ip.src, http_payload)
+        if hasattr(packet, 'http') and hasattr(packet.http, 'request_uri'):
+            request_uri = packet.http.request_uri
+            for pattern in self.patterns:
+                if pattern in request_uri:
+                    self.reporter.report_attack('sql_injection', packet.ip.src, {'uri': request_uri, 'pattern': pattern})
                     break
-
