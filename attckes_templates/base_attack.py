@@ -3,6 +3,7 @@ class BaseAttack:
         self.reporter = reporter
 
     def detect(self, packet):
+        """
+        Detects an attack. Should be implemented by subclasses.
+        """
         raise NotImplementedError("Subclasses should implement this method")
-
-
