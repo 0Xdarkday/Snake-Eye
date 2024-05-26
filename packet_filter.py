@@ -21,10 +21,12 @@ class PacketFilter:
         ]
 
     def is_private_ip(self, ip_address: str) -> bool:
+        """Check if the IP address is private."""
         ip = ipaddress.ip_address(ip_address)
         return ip.is_private
 
     def is_api_server(self, packet: Packet) -> bool:
+        """Check if the packet is directed to the API server."""
         if hasattr(packet, 'ip') and hasattr(packet, 'tcp'):
             if ((packet.ip.src == self.reporter.ip) or (packet.ip.dst == self.reporter.ip)) and \
                ((packet.tcp.dstport == self.reporter.port) or (packet.tcp.srcport == self.reporter.port)):
@@ -32,7 +34,9 @@ class PacketFilter:
         return False
 
     def filter(self, packet: Packet):
+        """Filter the packet and process it through various detectors."""
         if self.is_api_server(packet):
+            # Skip packets directed to the API server to avoid false positives.
             return
 
         if hasattr(packet, 'icmp'):
@@ -59,5 +63,10 @@ class PacketFilter:
                     }
                     self.reporter.report(p)
 
+        # Process packet through all detectors
         for detector in self.detectors:
-            detector.detect(packet)
+            try:
+                detector.detect(packet)
+            except Exception as e:
+                # Log any exception that occurs in a detector
+                logging.error(f"Error in detector {detector.__class__.__name__}: {e}")
