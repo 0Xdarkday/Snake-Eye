@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from collections import defaultdict
-from .base_attack import BaseAttack  # Use relative import
+from base_attack import BaseAttack  # Use relative import
 
 class DDOSAttackDetector(BaseAttack):
     def __init__(self, reporter, config):
