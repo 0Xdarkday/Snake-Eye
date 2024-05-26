@@ -27,5 +27,8 @@ def main():
     # Start packet capture
     start_packet_capture(config['interfaces']['default'], packet_filter)
 
+    # Generate HTML report
+    reporter.generate_html_report('network_security_report.html')
+
 if __name__ == '__main__':
     main()
