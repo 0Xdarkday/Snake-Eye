@@ -2,8 +2,6 @@
     "api_server": {
         "ip": "127.0.0.1",
         "port": 80,
-        "server_type": "apache",
-        "base_url": "",
         "report_endpoint": "report.php",
         "use_https": false
     },
