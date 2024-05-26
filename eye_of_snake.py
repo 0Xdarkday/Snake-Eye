@@ -12,9 +12,16 @@ def main():
     # Setup logging
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
     
-    # Create Reporter and PacketFilter instances
-    reporter = Reporter(config['api_server_ip'], config['api_server_port'], config['use_https'])
-    packet_filter = PacketFilter(reporter)
+# Initialize Reporter
+reporter = Reporter(
+    config['api_server']['ip'], 
+    config['api_server']['port'], 
+    config['api_server']['base_url'], 
+    config['api_server']['report_endpoint']
+)
+
+# Initialize PacketFilter
+packet_filter = PacketFilter(reporter, config)
     
     # Start packet capture
     start_packet_capture(config['interface'], packet_filter)
