@@ -1,5 +1,5 @@
 from collections import defaultdict
-from datetime import datetime, timedelta
+import ipaddress
 from pyshark.packet.packet import Packet
 from reporter import Reporter
 from attacks.port_scan import PortScanDetector
@@ -11,9 +11,9 @@ class PacketFilter:
         self.reporter = reporter
         self.config = config
         self.detectors = [
-            PortScanDetector(reporter, config),
-            DDOSAttackDetector(reporter, config),
-            SQLInjectionDetector(reporter, config)
+            PortScanDetector(reporter, config['detection_thresholds']['port_scan']),
+            DDOSAttackDetector(reporter, config['detection_thresholds']['ddos']),
+            SQLInjectionDetector(reporter, config['patterns']['sql_injection'])
         ]
 
     def is_private_ip(self, ip_address: str) -> bool:
@@ -32,28 +32,25 @@ class PacketFilter:
             return
 
         if hasattr(packet, 'icmp'):
-            p = {
-                'ipDst': packet.ip.dst,
-                'ipSrc': packet.ip.src,
-                'highest_layer': packet.highest_layer,
-                'sniff_timestamp': packet.sniff_timestamp
-            }
-            self.reporter.report(p)
+            self._report_packet(packet)
             return
 
         if packet.transport_layer in ['TCP', 'UDP']:
             if hasattr(packet, 'ip'):
                 if self.is_private_ip(packet.ip.src) and self.is_private_ip(packet.ip.dst):
-                    p = {
-                        'ipSrc': packet.ip.src,
-                        'ipDst': packet.ip.dst,
-                        'sniff_timestamp': packet.sniff_timestamp,
-                        'highest_layer': packet.highest_layer,
-                        'layer': packet.transport_layer,
-                        'srcPort': getattr(packet[packet.transport_layer.lower()], 'srcport', ''),
-                        'dstPort': getattr(packet[packet.transport_layer.lower()], 'dstport', '')
-                    }
-                    self.reporter.report(p)
+                    self._report_packet(packet)
 
         for detector in self.detectors:
             detector.detect(packet)
+
+    def _report_packet(self, packet: Packet):
+        p = {
+            'ipSrc': packet.ip.src,
+            'ipDst': packet.ip.dst,
+            'sniff_timestamp': packet.sniff_timestamp,
+            'highest_layer': packet.highest_layer,
+            'layer': packet.transport_layer,
+            'srcPort': getattr(packet[packet.transport_layer.lower()], 'srcport', ''),
+            'dstPort': getattr(packet[packet.transport_layer.lower()], 'dstport', '')
+        }
+        self.reporter.report(p)
