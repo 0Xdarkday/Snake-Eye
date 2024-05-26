@@ -1,23 +1,25 @@
 from datetime import datetime, timedelta
 from collections import defaultdict
-from base_attack import BaseAttack
+from .base_attack import BaseAttack  # Use relative import
 
 class DDOSAttackDetector(BaseAttack):
     def __init__(self, reporter, config):
         super().__init__(reporter)
-        self.ddos_tracker = defaultdict(list)
-        self.threshold = config['threshold']
-        self.window = timedelta(seconds=config['window'])
+        self.ddos_tracker = defaultdict(int)
+        self.ddos_threshold = config['detection_thresholds']['ddos']['threshold']
+        self.ddos_window = timedelta(seconds=config['detection_thresholds']['ddos']['window'])
+        self.last_cleared = datetime.now()
 
     def detect(self, packet):
+        now = datetime.now()
+        if now - self.last_cleared > self.ddos_window:
+            self.ddos_tracker.clear()
+            self.last_cleared = now
+
         if hasattr(packet, 'ip'):
             src_ip = packet.ip.src
-            now = datetime.now()
-            self.ddos_tracker[src_ip].append(now)
+            self.ddos_tracker[src_ip] += 1
 
-            # Remove outdated entries
-            self.ddos_tracker[src_ip] = [time for time in self.ddos_tracker[src_ip] if now - time <= self.window]
-            
-            if len(self.ddos_tracker[src_ip]) >= self.threshold:
-                self.reporter.report_attack('ddos', src_ip, {'occurrences': len(self.ddos_tracker[src_ip])})
-                self.ddos_tracker[src_ip].clear()
+            if self.ddos_tracker[src_ip] > self.ddos_threshold:
+                self.reporter.report_attack('DDOS', src_ip, {'count': self.ddos_tracker[src_ip]})
+                self.ddos_tracker[src_ip] = 0
