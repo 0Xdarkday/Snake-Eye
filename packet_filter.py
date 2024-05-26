@@ -2,11 +2,11 @@ from collections import defaultdict
 import ipaddress
 from pyshark.packet.packet import Packet
 from reporter import Reporter
-from attacks.port_scan import PortScanDetector
-from attacks.ddos_attack import DDOSAttackDetector
-from attacks.sql_injection import SQLInjectionDetector
-from attacks.mac_flooding import MACFloodingDetector
-from attacks.arp_attack import ARPAttackDetector
+from attckes_templates.port_scan import PortScanDetector
+from attckes_templates.ddos_attack import DDOSAttackDetector
+from attckes_templates.sql_injection import SQLInjectionDetector
+from attckes_templates.mac_flooding import MACFloodingDetector
+from attckes_templates.arp_attack import ARPAttackDetector
 
 class PacketFilter:
     def __init__(self, reporter: Reporter, config):
