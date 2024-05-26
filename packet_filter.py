@@ -1,10 +1,20 @@
-import ipaddress
+from collections import defaultdict
+from datetime import datetime, timedelta
 from pyshark.packet.packet import Packet
 from reporter import Reporter
+from attacks.port_scan import PortScanDetector
+from attacks.ddos_attack import DDOSAttackDetector
+from attacks.sql_injection import SQLInjectionDetector
 
 class PacketFilter:
-    def __init__(self, reporter: Reporter):
+    def __init__(self, reporter: Reporter, config):
         self.reporter = reporter
+        self.config = config
+        self.detectors = [
+            PortScanDetector(reporter, config),
+            DDOSAttackDetector(reporter, config),
+            SQLInjectionDetector(reporter, config)
+        ]
 
     def is_private_ip(self, ip_address: str) -> bool:
         ip = ipaddress.ip_address(ip_address)
@@ -44,3 +54,6 @@ class PacketFilter:
                         'dstPort': getattr(packet[packet.transport_layer.lower()], 'dstport', '')
                     }
                     self.reporter.report(p)
+
+        for detector in self.detectors:
+            detector.detect(packet)
