@@ -28,23 +28,16 @@ class Reporter:
         Args:
             message (dict): The message to report.
         """
-        temp = json.dumps(message)
-        jsonString = temp.encode('ascii')
-        b64 = base64.b64encode(jsonString)
-        jsonPayload = b64.decode('utf8').replace("'", '"')
-        self.logger.info(f"Reporting packet: {jsonPayload}")
-
         try:
+            json_payload = base64.b64encode(json.dumps(message).encode('ascii')).decode('utf8')
+            self.logger.info(f"Reporting packet: {json_payload}")
+
             url = f'{self.protocol}://{self.ip}:{self.port}{self.base_url}{self.report_endpoint}'
-            response = requests.get(url, params={'data': jsonPayload})
+            response = requests.get(url, params={'data': json_payload})
             response.raise_for_status()
             self.logger.info(f"Report sent successfully: {response.text}")
-        except requests.ConnectionError as e:
-            self.logger.error(f"Connection error while sending report: {e}")
-        except requests.HTTPError as e:
-            self.logger.error(f"HTTP error while sending report: {e}")
-        except requests.RequestException as e:
-            self.logger.error(f"Error while sending report: {e}")
+        except (requests.ConnectionError, requests.HTTPError, requests.RequestException) as e:
+            self.logger.exception(f"Error while sending report: {e}")
 
     def report_attack(self, attack_type: str, src_ip: str, details: dict):
         """
