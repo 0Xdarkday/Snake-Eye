@@ -5,19 +5,23 @@ from base_attack import BaseAttack
 class PortScanDetector(BaseAttack):
     def __init__(self, reporter, config):
         super().__init__(reporter)
-        self.port_scan_tracker = defaultdict(lambda: defaultdict(int))
-        self.port_scan_threshold = config['port_scan_threshold']
-        self.port_scan_window = timedelta(seconds=config['port_scan_window'])
+        self.port_scan_tracker = defaultdict(lambda: defaultdict(list))
+        self.threshold = config['threshold']
+        self.window = timedelta(seconds=config['window'])
 
     def detect(self, packet):
         if packet.transport_layer == 'TCP' and hasattr(packet, 'ip'):
             src_ip = packet.ip.src
             dst_port = packet.tcp.dstport
-            self.port_scan_tracker[src_ip][dst_port] += 1
+            now = datetime.now()
+            self.port_scan_tracker[src_ip][dst_port].append(now)
 
-            if len(self.port_scan_tracker[src_ip]) >= self.port_scan_threshold:
-                first_attempt_time = min(self.port_scan_tracker[src_ip], key=self.port_scan_tracker[src_ip].get)
-                if datetime.now() - first_attempt_time > self.port_scan_window:
-                    self.reporter.report_port_scan(src_ip, self.port_scan_tracker[src_ip])
-                    self.port_scan_tracker[src_ip].clear()
+            # Remove outdated entries
+            for port in list(self.port_scan_tracker[src_ip].keys()):
+                self.port_scan_tracker[src_ip][port] = [time for time in self.port_scan_tracker[src_ip][port] if now - time <= self.window]
+                if not self.port_scan_tracker[src_ip][port]:
+                    del self.port_scan_tracker[src_ip][port]
 
+            if len(self.port_scan_tracker[src_ip]) >= self.threshold:
+                self.reporter.report_attack('port_scan', src_ip, self.port_scan_tracker[src_ip])
+                self.port_scan_tracker[src_ip].clear()
