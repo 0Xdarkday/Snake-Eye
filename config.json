@@ -1,6 +1,34 @@
 {
-  "api_server_ip": "10.0.2.15", // Replace this with the IP address of your Apache server hosting the CGI script
-  "api_server_port": "8080",
-  "interface": "eth0",
-  "use_https": false
+    "api_server": {
+        "ip": "127.0.0.1",
+        "port": 80,
+        "server_type": "apache",
+        "base_url": "/api/",
+        "report_endpoint": "report.py"
+    },
+    "detection_thresholds": {
+        "port_scan": {
+            "threshold": 5,
+            "window": 60
+        },
+        "ddos": {
+            "threshold": 100,
+            "window": 10
+        }
+    },
+    "patterns": {
+        "sql_injection": [
+            "' OR '1'='1",
+            "' OR '1'='1' --",
+            "' OR '1'='1' /*",
+            "' OR 1=1"
+        ]
+    },
+    "logging": {
+        "level": "INFO",
+        "file": "logs/eye_of_snake.log"
+    },
+    "interfaces": {
+        "default": "eth0"
+    }
 }
