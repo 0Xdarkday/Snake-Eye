@@ -4,7 +4,12 @@
         "port": 80,
         "server_type": "apache",
         "base_url": "/api/",
-        "report_endpoint": "report.py"
+        "report_endpoint": "report.py",
+        "use_https": false
+    },
+    "logging": {
+        "level": "INFO",
+        "file": "logs/reporter.log"
     },
     "detection_thresholds": {
         "port_scan": {
@@ -23,10 +28,6 @@
             "' OR '1'='1' /*",
             "' OR 1=1"
         ]
-    },
-    "logging": {
-        "level": "INFO",
-        "file": "logs/eye_of_snake.log"
     },
     "interfaces": {
         "default": "eth0"
