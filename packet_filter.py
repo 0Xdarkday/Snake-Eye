@@ -5,6 +5,8 @@ from reporter import Reporter
 from attacks.port_scan import PortScanDetector
 from attacks.ddos_attack import DDOSAttackDetector
 from attacks.sql_injection import SQLInjectionDetector
+from attacks.mac_flooding import MACFloodingDetector
+from attacks.arp_attack import ARPAttackDetector
 
 class PacketFilter:
     def __init__(self, reporter: Reporter, config):
@@ -13,7 +15,9 @@ class PacketFilter:
         self.detectors = [
             PortScanDetector(reporter, config['detection_thresholds']['port_scan']),
             DDOSAttackDetector(reporter, config['detection_thresholds']['ddos']),
-            SQLInjectionDetector(reporter, config['patterns']['sql_injection'])
+            SQLInjectionDetector(reporter, config['patterns']['sql_injection']),
+            MACFloodingDetector(reporter, config['detection_thresholds']['mac_flooding']),
+            ARPAttackDetector(reporter, config['detection_thresholds']['arp'])
         ]
 
     def is_private_ip(self, ip_address: str) -> bool:
