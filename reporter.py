@@ -11,7 +11,7 @@ class Reporter:
         self.protocol = 'https' if use_https else 'http'
         self.base_url = base_url
         self.report_endpoint = report_endpoint
-        
+        self.reports = []  # Store reports
         # Ensure log directory exists
         log_dir = os.path.dirname(log_file)
         if not os.path.exists(log_dir):
@@ -55,3 +55,25 @@ class Reporter:
         }
         self.logger.info(f"Reporting attack: {attack_type} from {src_ip}")
         self.report(report_data)
+        
+    def generate_html_report(self, output_file: str):
+        """
+        Generate an HTML report.
+        """
+        with open('template.html', 'r') as template_file:
+            html_template = template_file.read()
+
+        report_content = ""
+        for report in self.reports:
+            report_content += f"""
+            <tr>
+                <td>{report['attack_type']}</td>
+                <td>{report['src_ip']}</td>
+                <td>{json.dumps(report['details'])}</td>
+            </tr>
+            """
+
+        html_content = html_template.replace('<!-- REPORT_CONTENT -->', report_content)
+
+        with open(output_file, 'w') as file:
+            file.write(html_content)
