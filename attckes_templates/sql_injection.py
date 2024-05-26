@@ -1,4 +1,4 @@
-from .base_attack import BaseAttack  # Use relative import
+from base_attack import BaseAttack  # Use relative import
 
 class SQLInjectionDetector(BaseAttack):
     def __init__(self, reporter, config):
