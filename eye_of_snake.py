@@ -14,8 +14,7 @@ def main():
     # Initialize Reporter
     reporter = Reporter(
         config['api_server']['ip'], 
-        config['api_server']['port'], 
-        config['api_server']['base_url'], 
+        config['api_server']['port'],  
         config['api_server']['report_endpoint'],
         config['api_server']['use_https'],
         config['logging']['file']
