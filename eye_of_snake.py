@@ -9,7 +9,7 @@ def main():
     config = load_config('config.json')
     
     # Setup logging
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+    logging.basicConfig(level=getattr(logging, config['logging']['level'].upper(), 'INFO'), format='%(asctime)s - %(levelname)s - %(message)s')
     
     # Initialize Reporter
     reporter = Reporter(
