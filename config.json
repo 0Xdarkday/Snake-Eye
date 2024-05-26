@@ -19,6 +19,14 @@
         "ddos": {
             "threshold": 100,
             "window": 10
+        },
+        "mac_flooding": {
+            "threshold": 100,
+            "window": 10
+        },
+        "arp": {
+            "threshold": 10,
+            "window": 60
         }
     },
     "patterns": {
