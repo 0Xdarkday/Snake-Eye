@@ -5,7 +5,7 @@ import requests
 import logging
 
 class Reporter:
-    def __init__(self, ip: str, port: int, base_url: str = '/cgi-bin/', report_endpoint: str = 'report.cgi', use_https: bool = False, log_file: str = 'logs/reporter.log'):
+    def __init__(self, ip: str, port: int, base_url: str = '/cgi-bin/api', report_endpoint: str = 'report.py', use_https: bool = False, log_file: str = 'logs/reporter.log'):
         self.ip = ip
         self.port = port
         self.protocol = 'https' if use_https else 'http'
