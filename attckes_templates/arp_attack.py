@@ -5,19 +5,16 @@ from base_attack import BaseAttack
 class ARPAttackDetector(BaseAttack):
     def __init__(self, reporter, config):
         super().__init__(reporter)
-        self.arp_tracker = defaultdict(list)
-        self.threshold = config['threshold']
-        self.window = timedelta(seconds=config['window'])
+        self.arp_tracker = defaultdict(int)
+        self.arp_threshold = config['detection_thresholds']['arp']['threshold']
+        self.arp_window = timedelta(seconds=config['detection_thresholds']['arp']['window'])
 
     def detect(self, packet):
         if hasattr(packet, 'arp'):
             src_ip = packet.arp.src_proto_ipv4
-            now = datetime.now()
-            self.arp_tracker[src_ip].append(now)
+            self.arp_tracker[src_ip] += 1
 
-            # Remove outdated entries
-            self.arp_tracker[src_ip] = [time for time in self.arp_tracker[src_ip] if now - time <= self.window]
-
-            if len(self.arp_tracker[src_ip]) >= self.threshold:
-                self.reporter.report_attack('arp_attack', src_ip, {'occurrences': len(self.arp_tracker[src_ip])})
-                self.arp_tracker[src_ip].clear()
+            if self.arp_tracker[src_ip] >= self.arp_threshold:
+                first_attempt_time = datetime.now() - self.arp_window
+                self.reporter.report_attack('arp', src_ip, {'count': self.arp_tracker[src_ip]})
+                self.arp_tracker[src_ip] = 0
