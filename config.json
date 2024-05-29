@@ -25,6 +25,10 @@
         "arp": {
             "threshold": 10,
             "window": 60
+        },
+        "icmp": {
+            "threshold": 50,
+            "window": 10
         }
     },
     "patterns": {
@@ -33,9 +37,31 @@
             "' OR '1'='1' --",
             "' OR '1'='1' /*",
             "' OR 1=1"
+        ],
+        "xxs": [
+            "<script>",
+            "</script>",
+            "onerror=",
+            "onload=",
+	     "alert"
+        ],
+        "ssti": [
+            "{{",
+            "{%",
+            "}}",
+            "%}"
+        ],
+        "csrf": [
+            "<input type=\"hidden\" name=\"csrf_token\"",
+            "<meta name=\"csrf-token\" content=\""
+        ],
+        "crlf": [
+            "\r\n",
+            "%0d%0a"
         ]
     },
     "interfaces": {
         "default": "eth0"
     }
 }
+
