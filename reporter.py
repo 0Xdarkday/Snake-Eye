@@ -2,6 +2,8 @@ import json
 import base64
 import requests
 import logging
+import os
+from datetime import datetime
 
 class Reporter:
     def __init__(self, ip, port, report_endpoint='report.php', use_https=False, log_file='logs/reporter.log'):
@@ -27,14 +29,20 @@ class Reporter:
             response = requests.post(url, data=json_payload)
             response.raise_for_status()
             self.logger.info(f"Report sent successfully: {response.text}")
+            print(f"Report sent successfully: {response.text}")
         except requests.RequestException as e:
             self.logger.exception(f"Error while sending report: {e}")
+            print(f"Error while sending report: {e}")
 
-    def report_attack(self, attack_type, src_ip, details):
+    def report_attack(self, attack_type, src_ip, dst_ip, protocol, details):
         report_data = {
+            'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
             'attack_type': attack_type,
             'src_ip': src_ip,
+            'dst_ip': dst_ip,
+            'protocol': protocol,
             'details': details
         }
-        self.logger.info(f"Reporting attack: {attack_type} from {src_ip}")
+        self.logger.info(f"Reporting attack: {attack_type} from {src_ip} to {dst_ip} using {protocol}")
+        print(f"Reporting attack: {attack_type} from {src_ip} to {dst_ip} using {protocol}")
         self.report(report_data)
