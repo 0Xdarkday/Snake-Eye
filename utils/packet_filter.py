@@ -1,17 +1,12 @@
 import logging
 import ipaddress
 from pyshark.packet.packet import Packet
-from reporter import Reporter
-from attacks_templates.port_scan import PortScanDetector
-from attacks_templates.ddos_attack import DDOSAttackDetector
-from attacks_templates.sql_injection import SQLInjectionDetector
-from attacks_templates.mac_flooding import MACFloodingDetector
-from attacks_templates.arp_attack import ARPAttackDetector
-from attacks_templates.icmp_packet_detector import ICMPPingDetector
-from attacks_templates.xxs_detector import XXSDetector
-from attacks_templates.ssti_detector import SSTIDetector
-from attacks_templates.csrf_detector import CSRFDetector
-from attacks_templates.crlf_detector import CRLFDetector
+from utils.reporter import Reporter
+from attacks_templates import (
+    PortScanDetector, DDOSAttackDetector, SQLInjectionDetector,
+    MACFloodingDetector, ARPAttackDetector, ICMPPingDetector,
+    XXSDetector, SSTIDetector, CSRFDetector, CRLFDetector
+)
 
 class PacketFilter:
     def __init__(self, reporter: Reporter, config):
