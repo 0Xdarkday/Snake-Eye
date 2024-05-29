@@ -4,6 +4,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $decoded_data = base64_decode($data);
     $json_data = json_decode($decoded_data, true);
 
+    // Debugging - log the received data
+    error_log("Received data: " . print_r($json_data, true));
+
     $log_file = '/var/log/apache2/report_log.json';
     
     // Ensure the log file exists
