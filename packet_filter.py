@@ -1,12 +1,17 @@
-from collections import defaultdict
+import logging
 import ipaddress
 from pyshark.packet.packet import Packet
 from reporter import Reporter
-from attckes_templates.port_scan import PortScanDetector
-from attckes_templates.ddos_attack import DDOSAttackDetector
-from attckes_templates.sql_injection import SQLInjectionDetector
-from attckes_templates.mac_flooding import MACFloodingDetector
-from attckes_templates.arp_attack import ARPAttackDetector
+from attacks_templates.port_scan import PortScanDetector
+from attacks_templates.ddos_attack import DDOSAttackDetector
+from attacks_templates.sql_injection import SQLInjectionDetector
+from attacks_templates.mac_flooding import MACFloodingDetector
+from attacks_templates.arp_attack import ARPAttackDetector
+from attacks_templates.icmp_packet_detector import ICMPPingDetector
+from attacks_templates.xxs_detector import XXSDetector
+from attacks_templates.ssti_detector import SSTIDetector
+from attacks_templates.csrf_detector import CSRFDetector
+from attacks_templates.crlf_detector import CRLFDetector
 
 class PacketFilter:
     def __init__(self, reporter: Reporter, config):
@@ -17,7 +22,12 @@ class PacketFilter:
             DDOSAttackDetector(reporter, config),
             SQLInjectionDetector(reporter, config),
             MACFloodingDetector(reporter, config),
-            ARPAttackDetector(reporter, config)
+            ICMPPingDetector(reporter, config),
+            ARPAttackDetector(reporter, config),
+            XXSDetector(reporter, config),
+            SSTIDetector(reporter, config),
+            CSRFDetector(reporter, config),
+            CRLFDetector(reporter, config)
         ]
 
     def is_private_ip(self, ip_address: str) -> bool:
@@ -39,34 +49,26 @@ class PacketFilter:
             # Skip packets directed to the API server to avoid false positives.
             return
 
-        if hasattr(packet, 'icmp'):
-            p = {
-                'ipDst': packet.ip.dst,
-                'ipSrc': packet.ip.src,
-                'highest_layer': packet.highest_layer,
-                'sniff_timestamp': packet.sniff_timestamp
-            }
-            self.reporter.report(p)
-            return
-
-        if packet.transport_layer in ['TCP', 'UDP']:
-            if hasattr(packet, 'ip'):
-                if self.is_private_ip(packet.ip.src) and self.is_private_ip(packet.ip.dst):
-                    p = {
-                        'ipSrc': packet.ip.src,
-                        'ipDst': packet.ip.dst,
-                        'sniff_timestamp': packet.sniff_timestamp,
-                        'highest_layer': packet.highest_layer,
-                        'layer': packet.transport_layer,
-                        'srcPort': getattr(packet[packet.transport_layer.lower()], 'srcport', ''),
-                        'dstPort': getattr(packet[packet.transport_layer.lower()], 'dstport', '')
-                    }
-                    self.reporter.report(p)
-
         # Process packet through all detectors
         for detector in self.detectors:
             try:
-                detector.detect(packet)
+                if detector.detect(packet):
+                    # If a detector identifies a suspicious packet, report it
+                    self.report_packet(packet)
             except Exception as e:
                 # Log any exception that occurs in a detector
                 logging.error(f"Error in detector {detector.__class__.__name__}: {e}")
+
+    def report_packet(self, packet: Packet):
+        """Report a suspicious packet."""
+        if hasattr(packet, 'ip'):
+            report_data = {
+                'ipSrc': packet.ip.src,
+                'ipDst': packet.ip.dst,
+                'sniff_timestamp': packet.sniff_timestamp,
+                'highest_layer': packet.highest_layer,
+                'layer': packet.transport_layer,
+                'srcPort': getattr(packet[packet.transport_layer.lower()], 'srcport', ''),
+                'dstPort': getattr(packet[packet.transport_layer.lower()], 'dstport', '')
+            }
+            self.reporter.report(report_data)
