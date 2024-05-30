@@ -1,31 +1,24 @@
-from datetime import datetime, timedelta
 from collections import defaultdict
+from datetime import datetime, timedelta
 from base_attack import BaseAttack
-
 
 class DDOSAttackDetector(BaseAttack):
     def __init__(self, reporter, config):
         super().__init__(reporter)
         self.threshold = config['detection_thresholds']['ddos']['threshold']
-        self.window = config['detection_thresholds']['ddos']['window']
-        self.ip_counter = defaultdict(int)
+        self.window = timedelta(seconds=config['detection_thresholds']['ddos']['window'])
+        self.ip_tracker = defaultdict(list)
 
     def detect(self, packet):
         if hasattr(packet, 'ip'):
             src_ip = packet.ip.src
-            self.ip_counter[src_ip] += 1
-            if self.ip_counter[src_ip] > self.threshold:
-                # Check if the IP address exceeds the threshold within the window
-                if self.check_threshold_exceeded(src_ip):
-                    self.reporter.report_attack('ddos_attack', src_ip, packet.ip.dst, packet.transport_layer, {'count': self.ip_counter[src_ip]})
-                    return True  # Attack detected
-        return False  # No attack detected
+            current_time = datetime.now()
+            self.ip_tracker[src_ip].append(current_time)
 
-    def check_threshold_exceeded(self, src_ip):
-        window_start = datetime.now() - timedelta(seconds=self.window)
-        for ip, count in self.ip_counter.items():
-            if count >= self.threshold and ip != src_ip:
-                first_attempt_time = datetime.now() - timedelta(seconds=self.window)
-                if self.ip_counter[src_ip] >= self.threshold and window_start <= first_attempt_time:
-                    return True
+            # Remove outdated timestamps
+            self.ip_tracker[src_ip] = [timestamp for timestamp in self.ip_tracker[src_ip] if current_time - timestamp <= self.window]
+
+            if len(self.ip_tracker[src_ip]) > self.threshold:
+                self.reporter.report_attack('DDoS Attack', src_ip, packet.ip.dst, 'IP', {'count': len(self.ip_tracker[src_ip])})
+                return True
         return False
