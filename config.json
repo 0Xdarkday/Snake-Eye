@@ -12,7 +12,9 @@
     "detection_thresholds": {
         "port_scan": {
             "threshold": 5,
-            "window": 60
+            "window": 30,
+            "special_threshold": 1000,
+            "special_window": 10
         },
         "ddos": {
             "threshold": 100,
@@ -27,7 +29,7 @@
             "window": 60
         },
         "icmp": {
-            "threshold": 50,
+            "threshold": 10,
             "window": 10
         }
     },
@@ -36,14 +38,33 @@
             "' OR '1'='1",
             "' OR '1'='1' --",
             "' OR '1'='1' /*",
-            "' OR 1=1"
+            "' OR 1=1",
+            "' OR 'a'='a",
+            "' OR ''='",
+            "' OR '1'='1' -- -",
+            "' OR 1=1 --",
+            "' OR 1=1#",
+            "' OR 1=1/*",
+            "admin' --",
+            "admin' #",
+            "admin'/*",
+            "' OR 'a'='a",
+            "') OR ('a'='a",
+            "') OR '1'='1",
+            "' OR 'text'='text",
+            "' OR 'x'='x",
+            "' OR 1=1 LIMIT 1 OFFSET 1 --",
+            "' UNION SELECT 1, 'anotheruser', 'doesnotmatter', 1--",
+            "UNION SELECT 1, 'anotheruser', 'doesnotmatter', 1--",
+            "' OR '' = '",
+            "' OR 'x' = 'x"
         ],
         "xxs": [
             "<script>",
             "</script>",
             "onerror=",
             "onload=",
-	     "alert"
+            "alert"
         ],
         "ssti": [
             "{{",
@@ -64,4 +85,3 @@
         "default": "eth0"
     }
 }
-
