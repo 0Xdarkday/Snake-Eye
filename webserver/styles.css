@@ -1,5 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', Arial, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
@@ -10,7 +12,8 @@ body {
     margin: 0 auto;
     background: #fff;
     padding: 20px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 10px;
 }
 
 h1 {
@@ -21,6 +24,7 @@ h1 {
 table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 20px;
 }
 
 table, th, td {
@@ -28,15 +32,30 @@ table, th, td {
 }
 
 th, td {
-    padding: 8px;
+    padding: 12px;
     text-align: left;
 }
 
 th {
-    background-color: #f2f2f2;
+    background-color: #007bff;
+    color: #fff;
 }
 
 tr:nth-child(even) {
     background-color: #f9f9f9;
 }
 
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+.ip-search input[type="text"] {
+    padding: 10px;
+    width: calc(100% - 120px);
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.ip-search .btn {
+    width: 100px;
+}
