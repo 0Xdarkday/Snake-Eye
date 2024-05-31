@@ -1,4 +1,4 @@
-from base_attack import BaseAttack  # Use relative import
+from base_attack import BaseAttack
 
 class SQLInjectionDetector(BaseAttack):
     def __init__(self, reporter, config):
@@ -10,5 +10,7 @@ class SQLInjectionDetector(BaseAttack):
             request_uri = packet.http.request_uri
             for pattern in self.patterns:
                 if pattern in request_uri:
-                    self.reporter.report_attack('SQL Injection', packet.ip.src, {'uri': request_uri, 'pattern': pattern})
-                    break
+                    self.reporter.report_attack('SQL Injection', packet.ip.src, packet.ip.dst, 'HTTP', {'uri': request_uri, 'pattern': pattern})
+                    return True
+        return False
+
