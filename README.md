@@ -1,4 +1,5 @@
 # Snake Eye - Advanced Network Attack Detection Tool
+![Snake Eye Logo](images/logo.PNG)
 
 ## Introduction
 
