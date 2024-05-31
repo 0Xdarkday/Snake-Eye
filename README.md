@@ -16,7 +16,7 @@ Snake Eye is equipped to detect a wide array of attacks, including but not limit
 - **ARP Spoofing**
 - **ICMP Ping Flooding**
 - **CRLF Injection**
-- 
+  
 ## Features
 
 ### Comprehensive Packet Inspection
