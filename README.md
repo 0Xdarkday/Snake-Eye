@@ -48,17 +48,14 @@ Snake Eye is equipped to detect a wide array of attacks, including but not limit
 - **Customizable Views**: Tailor the dashboard to display the information most relevant to your security needs.
 - **Alert Management**: Manage and review alerts, ensuring critical incidents are addressed promptly.
 
-## Dashboard Overview
-The Snake Eye dashboard, hosted on an Apache2 web server, provides a comprehensive and user-friendly interface for monitoring network security. Here’re the steps to access dashbord:
-- service apache2 start
-- http://127.0.0.1/view_reports.php
 
   
 ## Installation
 
-To get started with Snake Eye, follow these steps:
-- cd git clone https://github.com/0Xdarkday/Snake-Eye.git
-- cd Snake-Eye
-- sudo chmod +x Setup.sh
-- ./Setup.sh
-
+Get started with Snake Eye by following these steps:
+```sh
+git clone https://github.com/0Xdarkday/Snake-Eye.git
+cd Snake-Eye
+sudo chmod +x Setup.sh
+./Setup.sh
+pip install -r requirements.txt
