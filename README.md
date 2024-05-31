@@ -56,7 +56,7 @@ git clone https://github.com/0Xdarkday/Snake-Eye.git
 cd Snake-Eye
 sudo chmod +x Setup.sh
 ./Setup.sh
-
+```
 
 ## Dashboard Overview
 The Snake Eye dashboard, hosted on an Apache2 web server, provides a comprehensive and user-friendly interface for monitoring network security. Here’re the steps to access dashbord:
