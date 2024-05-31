@@ -5,16 +5,16 @@ Welcome to Snake Eye, a robust and versatile network attack detection tool desig
 
 Snake Eye is equipped to detect a wide array of attacks, including but not limited to:
 
-  **+ SQL Injection**
-  **+ Cross-Site Scripting (XSS)**
-  **+ Server-Side Template Injection (SSTI)**
-  **+ Cross-Site Request Forgery (CSRF)**
-  **+ Port Scans**
-  **+ Distributed Denial of Service (DDoS)**
-  **+ MAC Flooding**
-  **+ ARP Spoofing**
-  **+ ICMP Ping Flooding**
-  **+ CRLF Injection**
+  **1.SQL Injection**
+  **2.Cross-Site Scripting (XSS)**
+  **3.Server-Side Template Injection (SSTI)**
+  **4.Cross-Site Request Forgery (CSRF)**
+  **5.Port Scans**
+  **6.Distributed Denial of Service (DDoS)**
+  **7.MAC Flooding**
+  **8.ARP Spoofing**
+  **9.ICMP Ping Flooding**
+  **10.CRLF Injection**
 
 ### Features
 #### Comprehensive Packet Inspection
