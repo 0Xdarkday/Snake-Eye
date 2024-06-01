@@ -7,4 +7,4 @@ from .mac_flooding import MACFloodingDetector
 from .port_scan import PortScanDetector
 from .sql_injection import SQLInjectionDetector
 from .ssti_detector import SSTIDetector
-from .xxs_detector import XXSDetector
+from .xxs_detector import XSSDetector
