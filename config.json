@@ -11,13 +11,13 @@
     },
     "detection_thresholds": {
         "port_scan": {
-            "threshold": 5,
-            "window": 30,
+            "threshold": 50,
+            "window": 60,
             "special_threshold": 1000,
             "special_window": 10
         },
         "ddos": {
-            "threshold": 100,
+            "threshold": 1000,
             "window": 10
         },
         "mac_flooding": {
@@ -29,8 +29,12 @@
             "window": 60
         },
         "icmp": {
-            "threshold": 10,
+            "threshold": 20,
             "window": 10
+        },
+        "sql_injection": {
+            "threshold": 5,
+            "window": 60
         }
     },
     "patterns": {
@@ -57,14 +61,38 @@
             "' UNION SELECT 1, 'anotheruser', 'doesnotmatter', 1--",
             "UNION SELECT 1, 'anotheruser', 'doesnotmatter', 1--",
             "' OR '' = '",
-            "' OR 'x' = 'x"
+            "' OR 'x' = 'x",
+            "%27+OR+%271%27%3D%271",
+            "%27+OR+%271%27%3D%271%27+--+",
+            "%27+OR+%271%27%3D%271%27+/*",
+            "%27+OR+1%3D1",
+            "%27+OR+%27a%27%3D%27a",
+            "%27+OR+%27%27%3D%27",
+            "%27+OR+%271%27%3D%271%27+--+-",
+            "%27+OR+1%3D1+--+",
+            "%27+OR+1%3D1%23",
+            "%27+OR+1%3D1%2F*",
+            "admin%27+--+",
+            "admin%27+%23",
+            "admin%27%2F*",
+            "%27+OR+%27a%27%3D%27a",
+            "%27%29+OR+%28%27a%27%3D%27a",
+            "%27%29+OR+%271%27%3D%271",
+            "%27+OR+%27text%27%3D%27text",
+            "%27+OR+%27x%27%3D%27x",
+            "%27+OR+1%3D1+LIMIT+1+OFFSET+1+--+",
+            "%27+UNION+SELECT+1%2C+%27anotheruser%27%2C+%27doesnotmatter%27%2C+1--",
+            "UNION+SELECT+1%2C+%27anotheruser%27%2C+%27doesnotmatter%27%2C+1--",
+            "%27+OR+%27%27+%3D+%27",
+            "%27+OR+%27x%27+%3D+%27x"
         ],
-        "xxs": [
+        "xss": [
             "<script>",
             "</script>",
             "onerror=",
             "onload=",
-            "alert"
+            "alert",
+            "<script>alert(1)</script>"
         ],
         "ssti": [
             "{{",
@@ -79,9 +107,28 @@
         "crlf": [
             "\r\n",
             "%0d%0a"
+        ],
+        "lfi": [
+            "../",
+            "..\\",
+            "/etc/passwd",
+            "%2Fetc%2Fpasswd",
+            "C:\\Windows\\System32\\",
+            "%2e%2e%2f",
+            "%2e%2e%5c",
+            "%2fetc%2fpasswd",
+            "C%3a%5cWindows%5cSystem32%5c",
+            "%2E%2E%2Fetc%2Fpasswd",
+            "%2E%2E%2F%2E%2E%2Fetc%2Fpasswd",
+            "%2E%2E%2F%2E%2E%2F%2E%2E%2Fetc%2Fpasswd",
+            "%2E%2E%2F%2E%2E%2F%2E%2E%2F%2E%2E%2Fetc%2Fpasswd",
+             "../etc/passwd",
+             "../../etc/passwd",
+             "../../../etc/passwd",
+            "../../../../etc/passwd"
         ]
     },
     "interfaces": {
-        "default": "eth0"
+        "default": "any"
     }
 }
