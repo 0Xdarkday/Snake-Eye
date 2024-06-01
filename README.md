@@ -59,7 +59,27 @@ cd Snake-Eye
 sudo chmod +x Setup.sh
 ./Setup.sh
 ```
+## Example usages
+  ```sh
+- ┌──(kali㉿kali)-[~/IDs-]
+└─$ python main.py              
 
+
+/$$$$$$                      /$$                         /$$$$$$$$                    
+/$$__  $$                    | $$                        | $$_____/                    
+| $$  \__/ /$$$$$$$   /$$$$$$ | $$   /$$  /$$$$$$         | $$       /$$   /$$  /$$$$$$ 
+|  $$$$$$ | $$__  $$ |____  $$| $$  /$$/ /$$__  $$ /$$$$$$| $$$$$   | $$  | $$ /$$__  $$
+ \____  $$| $$  \ $$  /$$$$$$$| $$$$$$/ | $$$$$$$$|______/| $$__/   | $$  | $$| $$$$$$$$
+ /$$  \ $$| $$  | $$ /$$__  $$| $$_  $$ | $$_____/        | $$      | $$  | $$| $$_____/
+|  $$$$$$/| $$  | $$|  $$$$$$$| $$ \  $$|  $$$$$$$        | $$$$$$$$|  $$$$$$$|  $$$$$$$
+ \______/ |__/  |__/ \_______/|__/  \__/ \_______/        |________/ \____  $$ \_______/
+/$$                      /$$   | $$                                 /$$  | $$          
+| $$                     |__/   | $$                                |  $$$$$$/          
+|__/                              \__/                                 \______/
+
+                            Made by Mahmoud Shaker
+                            Welcome to Snake-Eye Network Detector
+```
 ## Dashboard Overview
 ![Dashboard Overview](images/dashboard.png)
 The Snake Eye dashboard, hosted on an Apache2 web server, provides a comprehensive and user-friendly interface for monitoring network security. Here’re the steps to access dashbord:
