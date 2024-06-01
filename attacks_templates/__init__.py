@@ -8,3 +8,4 @@ from .port_scan import PortScanDetector
 from .sql_injection import SQLInjectionDetector
 from .ssti_detector import SSTIDetector
 from .xxs_detector import XSSDetector
+from .lfi_detector import LFIDetector 
