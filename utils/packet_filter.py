@@ -5,7 +5,7 @@ from utils.reporter import Reporter
 from attacks_templates import (
     PortScanDetector, DDOSAttackDetector, SQLInjectionDetector,
     MACFloodingDetector, ARPAttackDetector, ICMPPingDetector,
-    XSSDetector, SSTIDetector, CSRFDetector, CRLFDetector
+    XSSDetector, SSTIDetector, CSRFDetector, CRLFDetector , LFIDetector 
 )
 
 class PacketFilter:
