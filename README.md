@@ -62,7 +62,7 @@ sudo chmod +x Setup.sh
 ## Example usages
   ```sh
 - ┌──(kali㉿kali)-[~/IDs-]
-└─$ python main.py              
+└─$ python eye_of_snake              
 
 
 /$$$$$$                      /$$                         /$$$$$$$$                    
