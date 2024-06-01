@@ -3,15 +3,13 @@ from base_attack import BaseAttack
 class SSTIDetector(BaseAttack):
     def __init__(self, reporter, config):
         super().__init__(reporter)
-        self.ssti_patterns = config['patterns']['ssti']
+        self.patterns = config['patterns']['ssti']
 
     def detect(self, packet):
-        if hasattr(packet, 'http'):
-            http_payload = getattr(packet.http, 'file_data', '')
-            for pattern in self.ssti_patterns:
-                if pattern in http_payload:
-                    src_ip = packet.ip.src
-                    dst_ip = packet.ip.dst
-                    protocol = packet.transport_layer
-                    self.reporter.report_attack('SSTI', src_ip, dst_ip, protocol, {'payload': http_payload})
-                    break
+        if hasattr(packet, 'http') and hasattr(packet.http, 'request_uri'):
+            request_uri = packet.http.request_uri
+            for pattern in self.patterns:
+                if pattern in request_uri:
+                    self.reporter.report_attack('SSTI', packet.ip.src, packet.ip.dst, 'HTTP', {'uri': request_uri, 'pattern': pattern})
+                    return True
+        return False
