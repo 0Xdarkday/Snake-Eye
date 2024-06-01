@@ -21,6 +21,18 @@ Snake Eye is equipped to detect a wide array of attacks, including but not limit
   
 ## Features
 
+### Customizing Detection Rules
+
+- You can customize the detection rules by editing the **config.json** file. This allows you to fine-tune how different attacks are detected based on your specific needs.
+
+### Adding Payloads for Detection
+
+To enhance the detection mechanisms, you can add custom payloads. **Ensure that you URL-encode the payloads before adding them to config.json.** URL-encoding converts characters into a format that can be transmitted over the internet.
+Threshold and Window
+
+  -  **Threshold:** This parameter defines the number of occurrences of a specific event (e.g., packets, requests) that must be detected within a given time window to consider it suspicious.
+  -  **Window:** This parameter defines the time period (in seconds) during which the occurrences are counted.
+    
 ### Comprehensive Packet Inspection
 - **Request and Response Analysis**: Inspects both HTTP request and response payloads to identify potential SQL injection attempts.
 - **Pattern Matching**: Utilizes predefined patterns to detect various types of attacks, ensuring broad coverage and effective detection.
